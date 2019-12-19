@@ -30,17 +30,21 @@ class ListenerAPI(APIView):
     def post(self, request):
         #baca data post request
         post_data = request.data
+        sentence = post_data['sentence']
         
-
-        # sentence = 'berapa%20biaya%20bpjs?'
-        
-        respon = requests.get('http://127.0.0.1:5000/?sentence_intent=berapa%20biaya%20bpjs?')
+        respon = requests.get('http://127.0.0.1:5000/?sentence_intent='+ sentence)
         # chat_respon = respon.json()
         # chat_respon = post_data[respon.json()]
         response_data = respon.json()
         ans = response_data['ans']
-
+        
         if ans == 'CLOSINGS':
+        #proses masukin sini
+            id = 1
+        #ambil record di DB berdasarkan hasil proses
+            answer = DATASET_ANSWER.objects.get(id=id)
+        
+        else:
         #proses masukin sini
             id = 1
         #ambil record di DB berdasarkan hasil proses
@@ -49,4 +53,5 @@ class ListenerAPI(APIView):
         # response
         return Response({
             'answer': answer.answer
+            # 'intent': answer.answer_intent  
         })
