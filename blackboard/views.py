@@ -32,7 +32,7 @@ class ListenerAPI(APIView):
         post_data = request.data
         sentence = post_data['sentence']
         
-        respon = requests.get('http://127.0.0.1:5000/?sentence_intent='+ sentence)
+        respon = requests.get('http://111.223.254.14/nlp/?sentence_intent='+ sentence)
         # chat_respon = respon.json()
         # chat_respon = post_data[respon.json()]
         response_data = respon.json()
@@ -43,12 +43,38 @@ class ListenerAPI(APIView):
             id = 1
         #ambil record di DB berdasarkan hasil proses
             answer = DATASET_ANSWER.objects.get(id=id)
-        
-        else:
+
+        elif ans == 'OTHERS':
         #proses masukin sini
-            id = 1
+            id = 2
         #ambil record di DB berdasarkan hasil proses
             answer = DATASET_ANSWER.objects.get(id=id)
+
+        elif ans == 'RECORD':
+        #proses masukin sini
+            id = 3
+        #ambil record di DB berdasarkan hasil proses
+            answer = DATASET_ANSWER.objects.get(id=id)
+
+        elif ans == 'PROFIL':
+        #proses masukin sini
+            id = 4
+        #ambil record di DB berdasarkan hasil proses
+            answer = DATASET_ANSWER.objects.get(id=id)
+
+        elif ans == 'GREETINGS':
+        #proses masukin sini
+            id = 5
+        #ambil record di DB berdasarkan hasil proses
+            answer = DATASET_ANSWER.objects.get(id=id)
+
+        elif ans == 'TRANSACTION':
+        #proses masukin sini
+            id = 6
+        #ambil record di DB berdasarkan hasil proses
+            answer = DATASET_ANSWER.objects.get(id=id)
+        
+        
 
         # response
         return Response({
