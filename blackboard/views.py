@@ -33,47 +33,62 @@ class ListenerAPI(APIView):
         sentence = post_data['sentence']
         
         respon = requests.get('http://111.223.254.14/nlp/?sentence_intent='+ sentence)
+        respon_ner = requests.get('http://111.223.254.14/ner/?sentence=berapa%20biaya%20bpjs%20saya?')
         # chat_respon = respon.json()
         # chat_respon = post_data[respon.json()]
         response_data = respon.json()
+        response_data_ner = respon_ner.json()
+        # print(response_data_ner)
         ans = response_data['ans']
-        
+        ans_ner = response_data_ner['ner']
+
         if ans == 'CLOSINGS':
         #proses masukin sini
             id = 1
         #ambil record di DB berdasarkan hasil proses
             answer = DATASET_ANSWER.objects.get(id=id)
+            
 
         elif ans == 'OTHERS':
         #proses masukin sini
             id = 2
         #ambil record di DB berdasarkan hasil proses
             answer = DATASET_ANSWER.objects.get(id=id)
+            
 
         elif ans == 'RECORD':
         #proses masukin sini
             id = 3
         #ambil record di DB berdasarkan hasil proses
             answer = DATASET_ANSWER.objects.get(id=id)
+            
 
         elif ans == 'PROFIL':
         #proses masukin sini
             id = 4
         #ambil record di DB berdasarkan hasil proses
             answer = DATASET_ANSWER.objects.get(id=id)
+            
 
         elif ans == 'GREETINGS':
         #proses masukin sini
             id = 5
         #ambil record di DB berdasarkan hasil proses
             answer = DATASET_ANSWER.objects.get(id=id)
+            
 
         elif ans == 'TRANSACTION':
         #proses masukin sini
             id = 6
         #ambil record di DB berdasarkan hasil proses
             answer = DATASET_ANSWER.objects.get(id=id)
-        
+
+        elif ans == 'CLOSINGS' and ans_ner == ["O","B-FIN","B-ORG","O"]:
+        #proses masukin sini
+            id = 18
+        #ambil record di DB berdasarkan hasil proses
+            answer = DATASET_ANSWER.objects.get(id=id)
+           
         
 
         # response
