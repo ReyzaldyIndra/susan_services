@@ -36,7 +36,7 @@ class ListenerAPI(APIView):
         string_ner = ''.join(ans_ner)
         # print(string_ner)
             
-        answer = DATASET_ANSWER.objects.filter(answer_intent=ans).get(question_ner=string_ner)
+        answer = DATASET_ANSWER.objects.filter(answer_intent=ans).get(quest_ner=string_ner)
         # print(ans_ner)
 
         # response

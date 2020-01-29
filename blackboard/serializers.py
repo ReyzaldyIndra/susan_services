@@ -15,5 +15,5 @@ class DatasetNLPSerializer(serializers.ModelSerializer):
 class DatasetAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = DATASET_ANSWER
-        fields = ('conversation_id', 'answer', 'answer_intent', 'answer_ner', 'question_ner')
+        fields = ('conversation_id', 'answer', 'answer_intent', 'answer_ner', 'quest_ner')
         read_only_field = ('conversation_id')
