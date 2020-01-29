@@ -15,7 +15,7 @@ class DATASET_ANSWER(models.Model):
     answer = models.CharField(max_length=3000)
     answer_intent = models.CharField(max_length=3000)
     answer_ner = models.CharField(max_length=200)
-    quest_ner = models.CharField(max_length=300, default='')
+    
 
     def __str__(self):
         return "{}".format(self.answer)
