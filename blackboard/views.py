@@ -23,27 +23,29 @@ class ListenerAPI(APIView):
         post_data = request.data
         sentence = post_data['sentence']
         # Berapa biaya BPJS untuk kelas 1?
-        # respon = requests.get('http://111.223.254.14/nlp/?sentence_intent='+ sentence)
+        respon = requests.get('http://111.223.254.14/nlp/?sentence_intent='+ sentence)
         respon_ner = requests.get('http://111.223.254.14/ner/?sentence_ner=' + sentence)
-        # response_data = respon.json()
+        response_data = respon.json()
         response_data_ner = respon_ner.json()
-        # ans = response_data['ans']
+        ans = response_data['ans']
         ans_ner = response_data_ner['ner']
-        # print(ans)
+        print(ans)
         print(ans_ner)
 
         #proses masukin sini
         #ambil record di DB berdasarkan hasil proses
         
-        string_ner = ''.join(ans_ner)
+        string_ner = ','.join(ans_ner)
         # print(string_ner)
-            
+        # string_intent = ans
         # answer = DATASET_ANSWER.objects.get(answer_intent=ans)
-        answer = DATASET_ANSWER.objects.get(answer_ner=string_ner)
-        # .get(answer_ner=string_ner)
+        # answer = DATASET_ANSWER.objects.get(answer_ner=string_ner)
+        string_answer = ans + ' -> ' + string_ner
+        answer = string_answer
         # print(ans_ner)
+        print(answer)
 
         # response
         return Response({
-            'answer': answer.answer
+            'answer': answer
         })
