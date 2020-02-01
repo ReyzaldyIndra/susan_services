@@ -24,7 +24,7 @@ class ListenerAPI(APIView):
         sentence = post_data['sentence']
         
         respon = requests.get('http://111.223.254.14/nlp/?sentence_intent='+ sentence)
-        respon_ner = requests.get('http://111.223.254.14/ner/?sentence=berapa%20biaya%20bpjs%20saya?')
+        respon_ner = requests.get('http://111.223.254.14/ner/?sentence=' + sentence)
         response_data = respon.json()
         response_data_ner = respon_ner.json()
         ans = response_data['ans']
