@@ -27,29 +27,32 @@ class AnswerViewSet(viewsets.ModelViewSet):
 
 class ListenerAPI(APIView):
     def post(self, request):
-        # cursor = db.cursor()
-        # q_ans = "SELECT jawaban FROM tbl_answer WHERE ner='B-FIN'"
+        cursor = db.cursor()
+        q_ans = "SELECT tbl_answer.jawaban, tbl_transaction.biaya_kelas FROM tbl_answer JOIN tbl_transaction ON tbl_answer.id_answer=tbl_transaction.id_answer WHERE tbl_answer.ner='B-FIN'"
         # q_info = "'SELECT biaya_kelas FROM tbl_transaction WHERE kelas_rawat='Kelas 1'"
-        # cursor.execute(q_ans,q_info)
-        # results = cursor.fetchall()
+        cursor.execute(q_ans)
+        results = cursor.fetchall()
+        
 
-        # for data in results:
-        #     print(data)
+        for data in results:
+            print(data)
+            string_ans = ','.join(data).replace(',', ' ')
+            print(string_ans)
     
-        # if db.is_connected():
-        #     print("Successfully connected to the DB")
+        if db.is_connected():
+            print("Successfully connected to the DB")
         #baca data post request
-        post_data = request.data
-        sentence = post_data['sentence']
+        # post_data = request.data
+        # sentence = post_data['sentence']
         # Berapa biaya BPJS untuk kelas 1?
-        respon = requests.get('https://111.223.254.14/nlp/?sentence_intent='+ sentence)
-        respon_ner = requests.get('https://111.223.254.14/ner/?sentence_ner=' + sentence)
-        response_data = respon.json()
-        response_data_ner = respon_ner.json()
-        ans = response_data['ans']
-        ans_ner = response_data_ner['ner']
-        print(ans)
-        print(ans_ner)
+        # respon = requests.get('https://111.223.254.14/nlp/?sentence_intent='+ sentence)
+        # respon_ner = requests.get('https://111.223.254.14/ner/?sentence_ner=' + sentence)
+        # response_data = respon.json()
+        # response_data_ner = respon_ner.json()
+        # ans = response_data['ans']
+        # ans_ner = response_data_ner['ner']
+        # print(ans)
+        # print(ans_ner)
 
         #proses masukin sini
         #ambil record di DB berdasarkan hasil proses
@@ -68,5 +71,5 @@ class ListenerAPI(APIView):
 
         # response
         return Response({
-            'answer': data
+            'answer': string_ans
         })
