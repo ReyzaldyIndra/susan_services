@@ -33,6 +33,8 @@ class ListenerAPI(APIView):
         # if db.is_connected():
         #     print("Successfully connected to the DB")
         #baca data post request
+        # ktp = ""
+        
         post_data = request.data
         sentence = post_data['sentence']
         # Berapa biaya BPJS untuk kelas 1?
@@ -52,12 +54,15 @@ class ListenerAPI(APIView):
         # q_info = "'SELECT biaya_kelas FROM tbl_transaction WHERE kelas_rawat='Kelas 1'"
         cursor.execute(q_ans)
         results = cursor.fetchall()
-        
-
+        # if(ktp == ""):
+        #     string_ans = "Berapa nomor KTP anda?"
+        #     ktp = post_data['sentence']
+        # elif(ktp != ""):
         for data in results:
             print(data)
             string_ans = ','.join(data).replace(',', ' ')
             print(string_ans)
+            # print(ktp)
         # print(response_data_ner)
 
         #proses masukin sini
@@ -77,5 +82,7 @@ class ListenerAPI(APIView):
 
         # response
         return Response({
-            'answer': string_ans
+            'answer': string_ans,
+            'intent': ans
+            # 'ner': ans_ner
         })
