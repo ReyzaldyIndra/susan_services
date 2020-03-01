@@ -51,6 +51,8 @@ class ListenerAPI(APIView):
             q_ans = "SELECT tbl_answer.jawaban, tbl_profil.provinsi_faskes, tbl_user.nama FROM tbl_answer JOIN tbl_profil JOIN tbl_user ON tbl_user.id_profil=tbl_profil.id_profil WHERE tbl_answer.ner='B-PROVINSI_FASKES' AND tbl_user.id_user = 1 AND tbl_answer.id_answer = 2;"
         elif (ans == 'RECORD'):
             q_ans = "SELECT tbl_answer.jawaban, tbl_record.segmen, tbl_user.nama FROM tbl_answer JOIN tbl_record JOIN tbl_user ON tbl_user.id_profil=tbl_record.id_record WHERE tbl_answer.ner='B-SEGMEN' AND tbl_user.id_user = 1 AND tbl_answer.id_answer = 13;"
+        elif (ans == 'CLOSINGS'):
+            q_ans = "SELECT jawaban FROM tbl_answer WHERE intent='CLOSINGS';"
         # q_info = "'SELECT biaya_kelas FROM tbl_transaction WHERE kelas_rawat='Kelas 1'"
         cursor.execute(q_ans)
         results = cursor.fetchall()
