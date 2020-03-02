@@ -46,7 +46,7 @@ class ListenerAPI(APIView):
         # ans_ner = response_data_ner['ner']
         print(ans)
         if (ans == "TRANSACTION"):
-            q_ans = "SELECT tbl_answer.jawaban, tbl_transaction.biaya_kelas, tbl_user.nama FROM tbl_answer JOIN tbl_transaction JOIN tbl_user  ON tbl_user.id_transaction=tbl_transaction.id_transaction WHERE tbl_answer.ner='B-FIN' AND tbl_user.id_user = 1 AND tbl_answer.id_answer = 1;"
+            q_ans = "SELECT tbl_answer.jawaban, tbl_transaction_biaya.biaya_kelas_biaya, tbl_user.nama FROM tbl_answer JOIN tbl_transaction_biaya JOIN tbl_user  ON tbl_user.id_transaction_biaya=tbl_transaction_biaya.id_transaction_biaya WHERE tbl_answer.ner='B-FIN' AND tbl_user.id_user = 1 AND tbl_answer.id_answer = 25;"
         elif (ans == "PROFIL"):
             q_ans = "SELECT tbl_answer.jawaban, tbl_profil.provinsi_faskes, tbl_user.nama FROM tbl_answer JOIN tbl_profil JOIN tbl_user ON tbl_user.id_profil=tbl_profil.id_profil WHERE tbl_answer.ner='B-PROVINSI_FASKES' AND tbl_user.id_user = 1 AND tbl_answer.id_answer = 2;"
         elif (ans == 'RECORD'):
