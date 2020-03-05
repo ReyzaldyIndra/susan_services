@@ -14,7 +14,8 @@ router.register(r'answer', views.AnswerViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('listener/', views.ListenerAPI.as_view(), name='listener')
+    path('listener/', views.ListenerAPI.as_view(), name='listener'),
+    path('ktp/', views.ListenKTPAPI.as_view(), name='listenKTP')
 ]
 
 # {

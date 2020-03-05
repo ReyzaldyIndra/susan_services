@@ -88,3 +88,26 @@ class ListenerAPI(APIView):
             'intent': ans
             # 'ner': ans_ner
         })
+
+class ListenKTPAPI(APIView):
+    def get(self, request):
+        cursor = db.cursor()
+        userLineID = request.data['userLineId']
+        q_ktp = "SELECT tbl_user.no_ktp FROM tbl_user WHERE id_user_line='" + userLineID + "';"
+        cursor.execute(q_ktp)
+        result = cursor.fetchone()
+        for data in result:
+            str_ktp = data
+        return Response({
+            'userLineId': userLineID,
+            'ktp': str_ktp
+        })
+
+class ListenNewUsers(APIView):
+    def post(self, request):
+        cursor = db.cursor()
+        no_ktp = request.data['ktp']
+        first_name = request.data['first_name']
+        userLineId = request.data['userLineId']
+        kelas_rawat = request.data['kelas_rawat']
+        # q_register = "INSERT INTO tbl_user (no_ktp, nama, id_user_line, id_profil, id_record, id_transaction_biaya, id_transaction_iuran, id_transaction_tagihan, id_answer) VALUES (" + no_ktp + first_name + userLineId + albert94, +kelas_rawat 1, 1, 1, 1, 1, NULL);"
