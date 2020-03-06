@@ -16,7 +16,8 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('listener/', views.ListenerAPI.as_view(), name='listener'),
     path('ktp/', views.ListenKTPAPI.as_view(), name='listenKTP'),
-    path('update/ktp/', views.UpdateKTPApi.as_view(), name='updateKTP')
+    path('ktp/update/', views.UpdateKTPApi.as_view(), name='updateKTP'),
+    path('ktp/post/', views.PostKTPApi.as_view(), name='postKTP')
 ]
 
 # {

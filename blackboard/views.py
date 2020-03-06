@@ -129,3 +129,23 @@ class UpdateKTPApi(APIView):
         })
         # kelas_rawat = request.data['kelas_rawat']
         # q_register = "INSERT INTO tbl_user (no_ktp, nama, id_user_line, id_profil, id_record, id_transaction_biaya, id_transaction_iuran, id_transaction_tagihan, id_answer) VALUES (" + no_ktp + first_name + userLineId + albert94, +kelas_rawat 1, 1, 1, 1, 1, NULL);"
+
+class PostKTPApi(APIView):
+    def post(self, request):
+        cursor = db.cursor()
+        userLineId = request.data['userLineId']
+        no_ktp = request.data['ktp']
+        name = request.data['name']
+        q_register = "INSERT INTO tbl_user (no_ktp, nama, id_user_line, id_profil, id_record, id_transaction_biaya, id_transaction_iuran, id_transaction_tagihan, id_answer) VALUES ("+ no_ktp+", '"+ name +"', '" + userLineId + "', 1, 1, 1, 1, 1, NULL);"
+        cursor.execute(q_register)
+        db.commit()
+        print(cursor.rowcount, "record(s) affected")
+        if (cursor.rowcount >= 1):
+            message = "Successfully registered user id"
+        elif (cursor.rowcount == 0):
+            message = "Registration failed"
+        
+        return Response({
+            'message': message,
+            'q_register': q_register
+        })
