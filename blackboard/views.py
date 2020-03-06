@@ -147,5 +147,5 @@ class PostKTPApi(APIView):
         
         return Response({
             'message': message,
-            'q_register': q_register
+            "ktp": no_ktp
         })
