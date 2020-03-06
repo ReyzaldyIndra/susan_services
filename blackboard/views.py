@@ -103,11 +103,29 @@ class ListenKTPAPI(APIView):
             'ktp': str_ktp
         })
 
-class ListenNewUsers(APIView):
-    def post(self, request):
+class UpdateKTPApi(APIView):
+    def put(self, request):
         cursor = db.cursor()
-        no_ktp = request.data['ktp']
-        first_name = request.data['first_name']
+        cursor_ktp = db.cursor()
+        
+        # first_name = request.data['first_name']
         userLineId = request.data['userLineId']
-        kelas_rawat = request.data['kelas_rawat']
+        no_ktp = request.data['ktp']
+        
+        q_put = "UPDATE tbl_user SET no_ktp='"+no_ktp+"' WHERE id_user_line='"+userLineId+"';"
+        q_ktp = "SELECT tbl_user.no_ktp FROM tbl_user WHERE id_user_line='" + userLineId + "';"
+        cursor.execute(q_put)
+        db.commit()
+        print(cursor.rowcount, "record(s) affected")
+        cursor_ktp.execute(q_ktp)
+        result_ktp = cursor_ktp.fetchone()
+        print(userLineId)
+        print(no_ktp)
+        for data in result_ktp:
+            print("ktp result", data)
+        return Response({
+            'userLineId': userLineId,
+            'ktp': data
+        })
+        # kelas_rawat = request.data['kelas_rawat']
         # q_register = "INSERT INTO tbl_user (no_ktp, nama, id_user_line, id_profil, id_record, id_transaction_biaya, id_transaction_iuran, id_transaction_tagihan, id_answer) VALUES (" + no_ktp + first_name + userLineId + albert94, +kelas_rawat 1, 1, 1, 1, 1, NULL);"
