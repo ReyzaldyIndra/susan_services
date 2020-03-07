@@ -67,14 +67,15 @@ class ListenerAPI(APIView):
         # ans_ner = response_data_ner['ner']
                     # print(ans)
                 if (ans == "TRANSACTION"):
-                    q_ans = "SELECT tbl_answer.jawaban, tbl_transaction_biaya.biaya_kelas_biaya, tbl_user.nama FROM tbl_answer JOIN tbl_transaction_biaya JOIN tbl_user  ON tbl_user.id_transaction_biaya=tbl_transaction_biaya.id_transaction_biaya WHERE tbl_answer.ner='B-FIN' AND tbl_user.id_user = 1 AND tbl_answer.id_answer = 25;"
+                    q_ans = "SELECT tbl_answer.jawaban, tbl_transaction_biaya.biaya_kelas_biaya FROM tbl_answer JOIN tbl_transaction_biaya JOIN tbl_user  ON tbl_user.id_transaction_biaya=tbl_transaction_biaya.id_transaction_biaya WHERE tbl_answer.ner='B-FIN' AND tbl_user.no_ktp ="+ id_data[1]+" AND tbl_answer.id_answer = 25;"
                 elif (ans == "PROFIL"):
-                    q_ans = "SELECT tbl_answer.jawaban, tbl_profil.provinsi_faskes, tbl_user.nama FROM tbl_answer JOIN tbl_profil JOIN tbl_user ON tbl_user.id_profil=tbl_profil.id_profil WHERE tbl_answer.ner='B-PROVINSI_FASKES' AND tbl_user.id_user = 1 AND tbl_answer.id_answer = 2;"
+                    q_ans = "SELECT tbl_answer.jawaban, tbl_profil.provinsi_faskes FROM tbl_answer JOIN tbl_profil JOIN tbl_user ON tbl_user.id_profil=tbl_profil.id_profil WHERE tbl_answer.ner='B-PROVINSI_FASKES' AND tbl_user.no_ktp ="+id_data[1]+" AND tbl_answer.id_answer = 2;"
                 elif (ans == 'RECORD'):
-                    q_ans = "SELECT tbl_answer.jawaban, tbl_record.segmen, tbl_user.nama FROM tbl_answer JOIN tbl_record JOIN tbl_user ON tbl_user.id_profil=tbl_record.id_record WHERE tbl_answer.ner='B-SEGMEN' AND tbl_user.id_user = 1 AND tbl_answer.id_answer = 13;"
+                    q_ans = "SELECT tbl_answer.jawaban, tbl_record.segmen FROM tbl_answer JOIN tbl_record JOIN tbl_user ON tbl_user.id_profil=tbl_record.id_record WHERE tbl_answer.ner='B-SEGMEN' AND tbl_user.no_ktp ="+id_data[1]+" AND tbl_answer.id_answer = 13;"
                 elif (ans == 'CLOSINGS'):
                     q_ans = "SELECT jawaban FROM tbl_answer WHERE intent='CLOSINGS';"
         # q_info = "'SELECT biaya_kelas FROM tbl_transaction WHERE kelas_rawat='Kelas 1'"
+                print(q_ans)
                 cursor.execute(q_ans)
                 results = cursor.fetchall()
         # if(ktp == ""):
