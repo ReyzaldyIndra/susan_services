@@ -52,12 +52,7 @@ class ListenerAPI(APIView):
                 ans="User is not registered yet"
                 
             elif (id_data[0] != "" and id_data[1] == ""):
-                # q_ktp = "SELECT no_ktp FROM tbl_user WHERE id_user_line='" +userLineId+"';"
-                # cursor_ktp.execute(q_ktp)
-                # result_ktp = cursor_ktp.fetchall()
-                # for ktp_data in result_ktp:
-                #     db_ktp = ktp_data
-                # if (db_ktp == ""):
+
                 string_ans = "ktpNULL"
                 ans="No user KTP registered yet"
                 # elif (db_ktp != ""):
