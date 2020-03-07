@@ -55,7 +55,7 @@ class ListenerAPI(APIView):
 
                 string_ans = "ktpNULL"
                 ans="No user KTP registered yet"
-                # elif (db_ktp != ""):
+                
             elif (id_data[0] != "" and id_data[1] != ""):
 
         # Berapa biaya BPJS untuk kelas 1?
