@@ -170,5 +170,6 @@ class PostKTPApi(APIView):
         
         return Response({
             'message': message,
+            'userLineId': userLineId,
             "ktp": no_ktp
         })
