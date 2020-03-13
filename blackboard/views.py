@@ -122,8 +122,7 @@ class ListenKTPAPI(APIView):
             str_ktp = data
         return Response({
             'userLineId': userLineID,
-            'ktp': str_ktp,
-            'q_ktp': q_ktp
+            'ktp': str_ktp
         })
 
 class UpdateKTPApi(APIView):
