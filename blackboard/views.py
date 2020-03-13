@@ -167,6 +167,7 @@ class PostKTPApi(APIView):
         elif (cursor.rowcount == 0):
             message = "Registration failed"
         
+        
         return Response({
             'message': message,
             "ktp": no_ktp
