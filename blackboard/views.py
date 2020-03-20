@@ -113,7 +113,6 @@ class PostKTPApi(APIView):
         cursor = db.cursor()
         userLineId = request.data['userLineId']
         no_ktp = request.data['ktp']
-        # name = request.data['name']
         q_register = "INSERT INTO tbl_user (no_ktp, nama, id_user_line, id_profil, id_record, id_transaction_biaya, id_transaction_iuran, id_transaction_tagihan, id_answer) VALUES ("+ no_ktp+", 'NULL', '" + userLineId + "', 1, 1, 1, 1, 1, NULL);"
         cursor.execute(q_register)
         db.commit()
