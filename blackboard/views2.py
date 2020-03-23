@@ -24,15 +24,17 @@ class ListenKTPAPI(APIView):
         userLineID = request.data['userLineId']
         q_ktp = "SELECT no_ktp FROM tbl_user WHERE id_user_line='" + userLineID + "';"
         cursor.execute(q_ktp)
-        result = cursor.fetchone()
-        print(cursor.rowcount, "record(s) affected")
-        if mysql.connector.errors.InternalError:
-            print("No KTP data")
-        if (cursor.rowcount == -1):
-            print("Database exception")
-        elif (cursor.rowcount >= 1):
-            for data in result:
-                str_ktp = data
+        try:
+            result = cursor.fetchone()
+            print(cursor.rowcount, "record(s) affected")
+            if (cursor.rowcount == -1):
+                print("No KTP data")
+            elif (cursor.rowcount >= 1):
+                for data in result:
+                    str_ktp = data
+        except mysql.connector.errors.InternalError as err:
+            print("Database exception", err)
+        
         return Response({
             'userLineId': userLineID,
             'ktp': str_ktp
