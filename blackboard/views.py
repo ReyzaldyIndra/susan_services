@@ -69,13 +69,18 @@ class ListenerAPI(APIView):
 
 class ListenKTPAPI(APIView):
     def get(self, request):
+        str_ktp = ""
         cursor = db.cursor()
         userLineID = request.data['userLineId']
-        q_ktp = "SELECT tbl_user.no_ktp FROM tbl_user WHERE id_user_line='" + userLineID + "';"
+        q_ktp = "SELECT no_ktp FROM tbl_user WHERE id_user_line='" + userLineID + "';"
         cursor.execute(q_ktp)
         result = cursor.fetchone()
-        for data in result:
-            str_ktp = data
+        print(cursor.rowcount, "record(s) affected")
+        if (cursor.rowcount == -1):
+            print("db error")
+        elif (cursor.rowcount >= 1):
+            for data in result:
+                str_ktp = data
         return Response({
             'userLineId': userLineID,
             'ktp': str_ktp
@@ -111,20 +116,25 @@ class UpdateKTPApi(APIView):
 class PostKTPApi(APIView):
     def post(self, request):
         cursor = db.cursor()
+        # cursor_ktp = db.cursor()
         userLineId = request.data['userLineId']
         no_ktp = request.data['ktp']
         q_register = "INSERT INTO tbl_user (no_ktp, nama, id_user_line, id_profil, id_record, id_transaction_biaya, id_transaction_iuran, id_transaction_tagihan, id_answer) VALUES ("+ no_ktp+", 'NULL', '" + userLineId + "', 1, 1, 1, 1, 1, NULL);"
         cursor.execute(q_register)
-        db.commit()
-        print(cursor.rowcount, "record(s) affected")
-        if (cursor.rowcount >= 1):
-            message = "Successfully registered user id"
-        elif (cursor.rowcount == 0):
-            message = "Registration failed"
+        # q_ktp = "SELECT tbl_user.no_ktp FROM tbl_user WHERE id_user_line='" + userLineId + "';"
+        # cursor_ktp.execute(q_ktp)
+        print(cursor.rowcount, "record(s) found")
+        # if (cursor_ktp.rowcount == 1):
+            # message = "Successfully registered user id"
+        # elif (cursor_ktp.rowcount == 0):
+            # message = "Registration failed"
+        # else :
+            # message = "Registration error"
         
         
         return Response({
-            'message': message,
-            'userLineId': userLineId,
-            "ktp": no_ktp
+            # 'message': message,
+            # 'userLineId': userLineId,
+            # "ktp": no_ktp
+            q_register
         })
