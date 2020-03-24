@@ -97,31 +97,40 @@ class UpdateKTPApi(APIView):
 class PostKTPApi(APIView):
     def post(self, request):
         cursor = db.cursor()
+        cursor_ktp =  db.cursor()
         message = ""
+        str_ktp = ""
         userLineId = request.data['userLineId']
         no_ktp = request.data['ktp']
         q_register = "INSERT INTO tbl_user (no_ktp, nama, id_user_line, id_profil, id_record, id_transaction_biaya, id_transaction_iuran, id_transaction_tagihan, id_answer) VALUES ("+ no_ktp+", 'NULL', '" + userLineId + "', 1, 1, 1, 1, 1, NULL);"
         cursor.execute(q_register)
-        print(q_register)
-        try:
-            print(cursor.rowcount, "record(s) found")
-            if (cursor.rowcount == -1):
-                message = "Can't write KTP"
-            elif (cursor.rowcount >= 1):
-                message = "Successfully registered data"
-        except mysql.connector.errors.InternalError as err:
-            print("Database exception", err)
-            message = "Database exception"
-        except mysql.connector.DatabaseError as dbError:
-            print("Timeout or db error", dbError)
-            message = "Timeout or db error"
-        except mysql.connector.errors.IntegrityError as integError:
-            message = "duplicate entry no_ktp"
-        
-        
+        if mysql.connector.errors.IntegrityError:
+                message = "duplicate entry no_ktp"
+                str_ktp = ""
+        elif mysql.connector.errors.InternalError:
+                message = "Database exception"
+                str_ktp = ""
+        elif mysql.connector.DatabaseError:
+                message = "Timeout or db error"
+                str_ktp = ""
+        elif mysql.connector.errors.IntegrityError:
+                message = "duplicate entry no_ktp"
+                str_ktp = ""
+        # print(q_register)
+        print(cursor.rowcount, "record(s) found")
+        if (cursor.rowcount == -1):
+            message = "Can't write KTP"
+            str_ktp = ""
+        elif (cursor.rowcount >= 1):
+            message = "Successfully registered data"
+            q_ktp = "SELECT no_ktp FROM tbl_user WHERE id_user_line='" + userLineId + "';"
+            cursor_ktp.execute(q_ktp)
+            result = cursor_ktp.fetchone()
+            for data in result:
+                str_ktp = data
+                print(str_ktp)
+            
         return Response({
             'message': message,
-            # 'userLineId': userLineId,
-            # "ktp": no_ktp
-            # q_register
+            'ktp': str_ktp
         })
