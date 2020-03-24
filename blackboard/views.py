@@ -52,6 +52,8 @@ class ListenerAPI(APIView):
             q_ans = "SELECT tbl_answer.jawaban, tbl_record.segmen FROM tbl_answer JOIN tbl_record JOIN tbl_user ON tbl_user.id_profil=tbl_record.id_record WHERE tbl_answer.ner='B-SEGMEN' AND tbl_user.id_user_line ='"+userLineId+"' AND tbl_answer.id_answer = 13;"
         elif (ans == 'CLOSINGS'):
             q_ans = "SELECT jawaban FROM tbl_answer WHERE intent='CLOSINGS';"
+        elif (ans == 'GREETINGS'):
+            q_ans = "SELECT jawaban FROM tbl_answer WHERE intent='GREETINGS';"
         
         print(q_ans)
         cursor.execute(q_ans)
