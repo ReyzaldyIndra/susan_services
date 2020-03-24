@@ -26,6 +26,7 @@ class ListenKTPAPI(APIView):
         cursor.execute(q_ktp)
         try:
             result = cursor.fetchone()
+            db.commit()
             print(cursor.rowcount, "record(s) affected")
             if (cursor.rowcount == -1):
                 print("No KTP data")
