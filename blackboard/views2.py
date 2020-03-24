@@ -29,6 +29,8 @@ class ListenKTPAPI(APIView):
             print(cursor.rowcount, "record(s) affected")
             if (cursor.rowcount == -1):
                 print("No KTP data")
+                userLineID = ""
+                str_ktp = ""
             elif (cursor.rowcount >= 1):
                 for data in result:
                     str_ktp = data
