@@ -104,6 +104,7 @@ class PostKTPApi(APIView):
         no_ktp = request.data['ktp']
         q_register = "INSERT INTO tbl_user (no_ktp, nama, id_user_line, id_profil, id_record, id_transaction_biaya, id_transaction_iuran, id_transaction_tagihan, id_answer) VALUES ("+ no_ktp+", 'NULL', '" + userLineId + "', 1, 1, 1, 1, 1, NULL);"
         cursor.execute(q_register)
+        db.commit()
         if mysql.connector.errors.IntegrityError:
                 message = "duplicate entry no_ktp"
                 str_ktp = ""
@@ -126,9 +127,10 @@ class PostKTPApi(APIView):
             q_ktp = "SELECT no_ktp FROM tbl_user WHERE id_user_line='" + userLineId + "';"
             cursor_ktp.execute(q_ktp)
             result = cursor_ktp.fetchone()
+            db.commit()
             for data in result:
                 str_ktp = data
-                print(str_ktp)
+            
             
         return Response({
             'message': message,
