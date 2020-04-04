@@ -12,7 +12,7 @@ import mysql.connector
 import re
 from datetime import datetime
 import locale
-locale.setlocale(locale.LC_TIME, "id")
+locale.setlocale(locale.LC_TIME, "id-ID")
 
 
 db = mysql.connector.connect(
