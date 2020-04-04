@@ -34,7 +34,7 @@ class ListenerAPI(APIView):
         cursor = db.cursor()
         cursor_answer = db.cursor()
         cursor_date = db.cursor()
-
+        cursor_other = db.cursor()
     
         post_data = request.data
         sentence = post_data['sentence']
@@ -62,24 +62,32 @@ class ListenerAPI(APIView):
             cursor_answer.execute(q_id)
             res_ans_id = cursor_answer.fetchone()
             db.commit()
-            for p in res_ans_id:
-                answer_id = p
-            print(answer_id, 'answer_id')
+            try:
+                for p in res_ans_id:
+                    answer_id = p
+                    print(answer_id, 'answer_id')
+            except Exception as e:
+                q_ans = "SELECT jawaban FROM tbl_answer WHERE intent='OTHERS';"
+                print("kosong cuk")
         elif (join_str == "") :
+            # q_ans = ""
+            print(ans)
             if (ans == 'CLOSINGS'):
                 q_ans = "SELECT jawaban FROM tbl_answer WHERE intent='CLOSINGS';"
                 # q_ans = "SELECT tbl_answer.jawaban, tbl_record.jenis_kunjungan FROM tbl_answer JOIN tbl_record JOIN tbl_user ON tbl_user.id_profil=tbl_record.id_record WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
                 
-            
             elif (ans == 'GREETINGS'):
                 q_ans = "SELECT jawaban FROM tbl_answer WHERE intent='GREETINGS';"
                 # q_ans = "SELECT tbl_answer.jawaban, tbl_record.jenis_kunjungan FROM tbl_answer JOIN tbl_record JOIN tbl_user ON tbl_user.id_profil=tbl_record.id_record WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
         
+            elif (ans == 'OTHERS'):
+                q_ans = "SELECT jawaban FROM tbl_answer WHERE intent='OTHERS';"
         
-                    # print(ans)
         if (ans == "TRANSACTION"):
             if (answer_id == 1) :
-                q_ans = "SELECT tbl_answer.jawaban, tbl_transaction_biaya.biaya_kelas_biaya FROM tbl_answer JOIN tbl_transaction_biaya JOIN tbl_user  ON tbl_user.id_transaction_biaya=tbl_transaction_biaya.id_transaction_biaya WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+ userLineId+"'"           
+                q_ans = "SELECT tbl_answer.jawaban, tbl_transaction_biaya.biaya_kelas_biaya FROM tbl_answer JOIN tbl_transaction_biaya JOIN tbl_user  ON tbl_user.id_transaction_biaya=tbl_transaction_biaya.id_transaction_biaya WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+ userLineId+"'"
+        elif (ans == "OTHERS"):
+                q_ans = "SELECT jawaban FROM tbl_answer WHERE intent='OTHERS';"
         elif (ans == "PROFIL"):
             if (answer_id == 2) :
                 q_ans = "SELECT tbl_answer.jawaban, tbl_profil.provinsi_faskes FROM tbl_answer JOIN tbl_profil JOIN tbl_user ON tbl_user.id_profil=tbl_profil.id_profil WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
