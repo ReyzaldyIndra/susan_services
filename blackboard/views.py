@@ -10,6 +10,9 @@ from django.http import JsonResponse
 import requests
 import mysql.connector
 import re
+from datetime import datetime
+import locale
+locale.setlocale(locale.LC_TIME, "id")
 
 
 db = mysql.connector.connect(
@@ -29,8 +32,8 @@ class AnswerViewSet(viewsets.ModelViewSet):
 class ListenerAPI(APIView):
     def post(self, request):
         cursor = db.cursor()
-        cursor_ktp = db.cursor()
-        cursor_user = db.cursor()
+        cursor_answer = db.cursor()
+        cursor_date = db.cursor()
 
     
         post_data = request.data
@@ -54,22 +57,123 @@ class ListenerAPI(APIView):
         str_ner = Filter(ans_ner, substr)
         join_str = "".join(str_ner)
         print(join_str)
+        if (join_str != "") :
+            q_id = "SELECT id_answer FROM tbl_answer WHERE ner='"+join_str+"';"
+            cursor_answer.execute(q_id)
+            res_ans_id = cursor_answer.fetchone()
+            db.commit()
+            for p in res_ans_id:
+                answer_id = p
+            print(answer_id, 'answer_id')
+        elif (join_str == "") :
+            if (ans == 'CLOSINGS'):
+                q_ans = "SELECT jawaban FROM tbl_answer WHERE intent='CLOSINGS';"
+                # q_ans = "SELECT tbl_answer.jawaban, tbl_record.jenis_kunjungan FROM tbl_answer JOIN tbl_record JOIN tbl_user ON tbl_user.id_profil=tbl_record.id_record WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
+                
+            
+            elif (ans == 'GREETINGS'):
+                q_ans = "SELECT jawaban FROM tbl_answer WHERE intent='GREETINGS';"
+                # q_ans = "SELECT tbl_answer.jawaban, tbl_record.jenis_kunjungan FROM tbl_answer JOIN tbl_record JOIN tbl_user ON tbl_user.id_profil=tbl_record.id_record WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
+        
+        
                     # print(ans)
         if (ans == "TRANSACTION"):
-            q_ans = "SELECT tbl_answer.jawaban, tbl_transaction_biaya.biaya_kelas_biaya FROM tbl_answer JOIN tbl_transaction_biaya JOIN tbl_user  ON tbl_user.id_transaction_biaya=tbl_transaction_biaya.id_transaction_biaya WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+ userLineId+"'"                
+            if (answer_id == 1) :
+                q_ans = "SELECT tbl_answer.jawaban, tbl_transaction_biaya.biaya_kelas_biaya FROM tbl_answer JOIN tbl_transaction_biaya JOIN tbl_user  ON tbl_user.id_transaction_biaya=tbl_transaction_biaya.id_transaction_biaya WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+ userLineId+"'"           
         elif (ans == "PROFIL"):
-            q_ans = "SELECT tbl_answer.jawaban, tbl_profil.provinsi_faskes FROM tbl_answer JOIN tbl_profil JOIN tbl_user ON tbl_user.id_profil=tbl_profil.id_profil WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
+            if (answer_id == 2) :
+                q_ans = "SELECT tbl_answer.jawaban, tbl_profil.provinsi_faskes FROM tbl_answer JOIN tbl_profil JOIN tbl_user ON tbl_user.id_profil=tbl_profil.id_profil WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
+            elif (answer_id == 3) :
+                q_ans = "SELECT tbl_answer.jawaban, tbl_profil.kabupaten_faskes FROM tbl_answer JOIN tbl_profil JOIN tbl_user ON tbl_user.id_profil=tbl_profil.id_profil WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
+            elif (answer_id == 4) :
+                q_ans = "SELECT tbl_answer.jawaban, tbl_profil.kecamatan_faskes FROM tbl_answer JOIN tbl_profil JOIN tbl_user ON tbl_user.id_profil=tbl_profil.id_profil WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
+            elif (answer_id == 5) :
+                q_ans = "SELECT tbl_answer.jawaban, tbl_profil.kelurahan_faskes FROM tbl_answer JOIN tbl_profil JOIN tbl_user ON tbl_user.id_profil=tbl_profil.id_profil WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
+            elif (answer_id == 6 or answer_id == 7) :
+                q_ans = "SELECT tbl_answer.jawaban, tbl_profil.kepemilikan_faskes FROM tbl_answer JOIN tbl_profil JOIN tbl_user ON tbl_user.id_profil=tbl_profil.id_profil WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
+            elif (answer_id == 8) :
+                q_ans = "SELECT tbl_answer.jawaban, tbl_profil.jenis_faskes FROM tbl_answer JOIN tbl_profil JOIN tbl_user ON tbl_user.id_profil=tbl_profil.id_profil WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
+            elif (answer_id == 9) :
+                q_ans = "SELECT tbl_answer.jawaban, tbl_profil.provinsi_faskes FROM tbl_answer JOIN tbl_profil JOIN tbl_user ON tbl_user.id_profil=tbl_profil.id_profil WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
+            elif (answer_id == 10) :
+                q_ans = "SELECT tbl_answer.jawaban, tbl_profil.kabupaten_faskes FROM tbl_answer JOIN tbl_profil JOIN tbl_user ON tbl_user.id_profil=tbl_profil.id_profil WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
+            elif (answer_id == 11) :
+                q_ans = "SELECT tbl_answer.jawaban, tbl_profil.tipe_faskes FROM tbl_answer JOIN tbl_profil JOIN tbl_user ON tbl_user.id_profil=tbl_profil.id_profil WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
+            # elif (answer_id == 12) :
+            #     q_ans = "SELECT tbl_answer.jawaban, tbl_profil.kelas_rawat FROM tbl_answer JOIN tbl_profil JOIN tbl_user ON tbl_user.id_profil=tbl_profil.id_profil WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
         elif (ans == 'RECORD'):
-            q_ans = "SELECT tbl_answer.jawaban, tbl_record.segmen FROM tbl_answer JOIN tbl_record JOIN tbl_user ON tbl_user.id_profil=tbl_record.id_record WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
-        elif (ans == 'CLOSINGS'):
-            q_ans = "SELECT jawaban FROM tbl_answer WHERE intent='CLOSINGS';"
-        elif (ans == 'GREETINGS'):
-            q_ans = "SELECT jawaban FROM tbl_answer WHERE intent='GREETINGS';"
-        
+            if (answer_id == 12) :
+                q_ans = "SELECT tbl_answer.jawaban, tbl_profil.kelas_rawat FROM tbl_answer JOIN tbl_profil JOIN tbl_user ON tbl_user.id_profil=tbl_profil.id_profil WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
+            elif (answer_id == 19):
+                q_ans = "SELECT tbl_answer.jawaban, tbl_record.tgl_datang FROM tbl_answer JOIN tbl_record JOIN tbl_user ON tbl_user.id_profil=tbl_record.id_record WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
+                cursor.execute(q_ans)
+                pulang_res = cursor.fetchall()
+                db.commit()
+
+                for data in pulang_res:
+                    print(data[1])
+                    date_datang = data[1]
+                    date_str = date_datang.strftime("%d %B %Y")
+                    print(date_str, 'hari nya')
+                    string_ans = data[0] + ' ' + date_str
+                    print(string_ans, 'jawaban+hari')
+                    return Response({
+                        'answer': string_ans,
+                        'intent': ans
+                    })
+            elif (answer_id == 20) :
+                q_ans = "SELECT tbl_answer.jawaban, tbl_record.tgl_pulang FROM tbl_answer JOIN tbl_record JOIN tbl_user ON tbl_user.id_profil=tbl_record.id_record WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
+                cursor.execute(q_ans)
+                pulang_res = cursor.fetchall()
+                db.commit()
+
+                for data in pulang_res:
+                    print(data[1])
+                    date_pulang = data[1]
+                    date_str = date_pulang.strftime("%d %B %Y")
+                    print(date_str, 'hari nya')
+                    string_ans = data[0] + ' ' + date_str
+                    print(string_ans, 'jawaban+hari')
+                    return Response({
+                        'answer': string_ans,
+                        'intent': ans
+                    })
+            elif (answer_id == 21) :
+                q_ans = "SELECT tbl_answer.jawaban, tbl_record.tgl_tindakan FROM tbl_answer JOIN tbl_record JOIN tbl_user ON tbl_user.id_profil=tbl_record.id_record WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
+                cursor.execute(q_ans)
+                tindakan_res = cursor.fetchall()
+                db.commit()
+
+                for data in tindakan_res:
+                    print(data[1])
+                    date_tindakan = data[1]
+                    date_str = date_tindakan.strftime("%d %B %Y")
+                    print(date_str, 'hari nya')
+                    string_ans = data[0] + ' ' + date_str
+                    print(string_ans, 'jawaban+hari')
+                    return Response({
+                        'answer': string_ans,
+                        'intent': ans
+                    })
+            elif (answer_id == 22) :
+                q_ans = "SELECT tbl_answer.jawaban, tbl_record.poliklinik_rujukan FROM tbl_answer JOIN tbl_record JOIN tbl_user ON tbl_user.id_profil=tbl_record.id_record WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
+            elif (answer_id == 13) :
+                q_ans = "SELECT tbl_answer.jawaban, tbl_record.segmen FROM tbl_answer JOIN tbl_record JOIN tbl_user ON tbl_user.id_profil=tbl_record.id_record WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
+            elif (answer_id == 14) :
+                q_ans = "SELECT tbl_answer.jawaban, tbl_record.disease FROM tbl_answer JOIN tbl_record JOIN tbl_user ON tbl_user.id_profil=tbl_record.id_record WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
+            elif (answer_id == 15) :
+                q_ans = "SELECT tbl_answer.jawaban, tbl_record.status_pulang FROM tbl_answer JOIN tbl_record JOIN tbl_user ON tbl_user.id_profil=tbl_record.id_record WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
+            elif (answer_id == 16) :
+                q_ans = "SELECT tbl_answer.jawaban, tbl_record.hospital FROM tbl_answer JOIN tbl_record JOIN tbl_user ON tbl_user.id_profil=tbl_record.id_record WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
+            elif (answer_id == 17) :
+                q_ans = "SELECT tbl_answer.jawaban, tbl_record.tingkat_layanan FROM tbl_answer JOIN tbl_record JOIN tbl_user ON tbl_user.id_profil=tbl_record.id_record WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
+            elif (answer_id == 18) :
+                q_ans = "SELECT tbl_answer.jawaban, tbl_record.jenis_kunjungan FROM tbl_answer JOIN tbl_record JOIN tbl_user ON tbl_user.id_profil=tbl_record.id_record WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
+
+       
         print(q_ans)
         cursor.execute(q_ans)
         results = cursor.fetchall()
-
         for data in results:
             string_ans = ','.join(data).replace(',', ' ')
   
