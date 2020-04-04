@@ -9,6 +9,7 @@ from .models import DATASET_NLP, DATASET_ANSWER
 from django.http import JsonResponse
 import requests
 import mysql.connector
+import re
 
 
 db = mysql.connector.connect(
@@ -38,18 +39,28 @@ class ListenerAPI(APIView):
 
         # Berapa biaya BPJS untuk kelas 1?
         respon = requests.get('http://111.223.254.14:5000/?sentence_intent='+ sentence)
-        # respon_ner = requests.get('http://111.223.254.14:5001/?sentence_ner=' + sentence, verify=False, timeout=100)
+        respon_ner = requests.get('http://111.223.254.14:5001/?sentence_ner='+ sentence)
         response_data = respon.json()
-        # response_data_ner = respon_ner.json()
+        response_data_ner = respon_ner.json()
         ans = response_data['ans']
-        # ans_ner = response_data_ner['ner']
+        ans_ner = response_data_ner['ner']
+
+        substr = ['B-PROVINSI_FASKES', 'B-FIN', 'B-KABUPATEN_FASKES', 'B-KECAMATAN_FASKES', 'B-KELURAHAN_FASKES',
+        'B-KEPEMILIKAN_FASKES','B-ORG','I-KEPEMILIKAN_FASKES', 'B-JENIS_FASKES','I-JENIS_FASKES', 'I-PROVINSI_FASKES',
+        'I-KABUPATEN_FASKES', 'B-TIPE_FASKES','I-TIPE_FASKES', 'B-KELAS_RAWAT', 'B-SEGMEN',
+        'B-DISEASE', 'B-STATUS_PULANG','B-HOSPITAL','I-HOSPITAL', 'B-TINGKAT_LAYANAN','I-TINGKAT_LAYANAN', 
+        'B-JENIS_KUNJUNGAN','I-JENIS_KUNJUNGAN','B-TGL_DATANG', 'B-TGL_PULANG', 'B-TGL_TINDAKAN','I-TGL_TINDAKAN',
+        'B-POLIKLINIK_RUJUKAN','I-POLIKLINIK_RUJUKAN']
+        str_ner = Filter(ans_ner, substr)
+        join_str = "".join(str_ner)
+        print(join_str)
                     # print(ans)
         if (ans == "TRANSACTION"):
-            q_ans = "SELECT tbl_answer.jawaban, tbl_transaction_biaya.biaya_kelas_biaya FROM tbl_answer JOIN tbl_transaction_biaya JOIN tbl_user  ON tbl_user.id_transaction_biaya=tbl_transaction_biaya.id_transaction_biaya WHERE tbl_answer.ner='B-FIN' AND tbl_user.id_user_line ='"+ userLineId+"' AND tbl_answer.id_answer = 25;"                
+            q_ans = "SELECT tbl_answer.jawaban, tbl_transaction_biaya.biaya_kelas_biaya FROM tbl_answer JOIN tbl_transaction_biaya JOIN tbl_user  ON tbl_user.id_transaction_biaya=tbl_transaction_biaya.id_transaction_biaya WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+ userLineId+"'"                
         elif (ans == "PROFIL"):
-            q_ans = "SELECT tbl_answer.jawaban, tbl_profil.provinsi_faskes FROM tbl_answer JOIN tbl_profil JOIN tbl_user ON tbl_user.id_profil=tbl_profil.id_profil WHERE tbl_answer.ner='B-PROVINSI_FASKES' AND tbl_user.id_user_line ='"+userLineId+"' AND tbl_answer.id_answer = 2;"
+            q_ans = "SELECT tbl_answer.jawaban, tbl_profil.provinsi_faskes FROM tbl_answer JOIN tbl_profil JOIN tbl_user ON tbl_user.id_profil=tbl_profil.id_profil WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
         elif (ans == 'RECORD'):
-            q_ans = "SELECT tbl_answer.jawaban, tbl_record.segmen FROM tbl_answer JOIN tbl_record JOIN tbl_user ON tbl_user.id_profil=tbl_record.id_record WHERE tbl_answer.ner='B-SEGMEN' AND tbl_user.id_user_line ='"+userLineId+"' AND tbl_answer.id_answer = 13;"
+            q_ans = "SELECT tbl_answer.jawaban, tbl_record.segmen FROM tbl_answer JOIN tbl_record JOIN tbl_user ON tbl_user.id_profil=tbl_record.id_record WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
         elif (ans == 'CLOSINGS'):
             q_ans = "SELECT jawaban FROM tbl_answer WHERE intent='CLOSINGS';"
         elif (ans == 'GREETINGS'):
@@ -138,3 +149,7 @@ class PostKTPApi(APIView):
             'message': message,
             'ktp': str_ktp
         })
+
+def Filter(string, substr): 
+    return [str for str in string  
+    if re.match(r'[^\d]+|^', str).group(0) in substr] 

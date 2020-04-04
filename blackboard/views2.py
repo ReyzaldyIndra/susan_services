@@ -9,6 +9,7 @@ from .models import DATASET_NLP, DATASET_ANSWER
 from django.http import JsonResponse
 import requests
 import mysql.connector
+import re
 
 db = mysql.connector.connect(
     host="susandb.cwn5kclnwgbj.us-east-1.rds.amazonaws.com",
@@ -42,3 +43,32 @@ class ListenKTPAPI(APIView):
             'userLineId': userLineID,
             'ktp': str_ktp
         })
+
+class ListenNERAPI(APIView):
+    def post(self, request):
+        cursor = db.cursor()
+        post_data = request.data
+        sentence = post_data['sentence']
+        userLineId = post_data['userLineId']
+        respon = requests.get('http://111.223.254.14:5001/?sentence_ner='+ sentence)
+        response_data = respon.json()
+        ans = response_data['ner']
+        # fak = [sub.replace('O', '') for sub in ans] 
+        # o_remover = fak.replace('O', '')
+        # o_split = fak.split()
+        substr = ['B-PROVINSI_FASKES', 'B-FIN', 'B-KABUPATEN_FASKES', 'B-KECAMATAN_FASKES', 'B-KELURAHAN_FASKES',
+        'B-KEPEMILIKAN_FASKES','B-ORG','I-KEPEMILIKAN_FASKES', 'B-JENIS_FASKES','I-JENIS_FASKES', 'I-PROVINSI_FASKES',
+        'I-KABUPATEN_FASKES', 'B-TIPE_FASKES','I-TIPE_FASKES', 'B-KELAS_RAWAT', 'B-SEGMEN',
+        'B-DISEASE', 'B-STATUS_PULANG','B-HOSPITAL','I-HOSPITAL', 'B-TINGKAT_LAYANAN','I-TINGKAT_LAYANAN', 
+        'B-JENIS_KUNJUNGAN','I-JENIS_KUNJUNGAN','B-TGL_DATANG', 'B-TGL_PULANG', 'B-TGL_TINDAKAN','I-TGL_TINDAKAN',
+        'B-POLIKLINIK_RUJUKAN','I-POLIKLINIK_RUJUKAN']
+        str_ner = Filter(ans, substr)
+        join_str = "".join(str_ner)
+        print(join_str)
+        return Response({
+            'str_ner': str_ner
+        })
+
+def Filter(string, substr): 
+    return [str for str in string  
+    if re.match(r'[^\d]+|^', str).group(0) in substr] 
