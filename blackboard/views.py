@@ -16,7 +16,7 @@ locale.setlocale(locale.LC_TIME, "id_ID")
 
 
 db = mysql.connector.connect(
-    host="susandb.cwn5kclnwgbj.us-east-1.rds.amazonaws.com",
+    host="susan-db.cpfkct9edcfy.us-east-1.rds.amazonaws.com",
     user="admin",
     passwd="Rlatpwjd828",
     database="susan"
@@ -171,6 +171,8 @@ class ListenerAPI(APIView):
                 q_ans = "SELECT tbl_answer.jawaban, tbl_record.disease FROM tbl_answer JOIN tbl_record JOIN tbl_user ON tbl_user.id_profil=tbl_record.id_record WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
             elif (answer_id == 15) :
                 q_ans = "SELECT tbl_answer.jawaban, tbl_record.status_pulang FROM tbl_answer JOIN tbl_record JOIN tbl_user ON tbl_user.id_profil=tbl_record.id_record WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
+                if (ans != 'RECORD'):
+                    q_ans = "SELECT jawaban FROM tbl_answer WHERE intent='OTHERS';"
             elif (answer_id == 16) :
                 q_ans = "SELECT tbl_answer.jawaban, tbl_record.hospital FROM tbl_answer JOIN tbl_record JOIN tbl_user ON tbl_user.id_profil=tbl_record.id_record WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
             elif (answer_id == 17) :
