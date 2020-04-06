@@ -12,7 +12,7 @@ import mysql.connector
 import re
 
 db = mysql.connector.connect(
-    host="susandb.cwn5kclnwgbj.us-east-1.rds.amazonaws.com",
+    host="susan-db.cpfkct9edcfy.us-east-1.rds.amazonaws.com",
     user="admin",
     passwd="Rlatpwjd828",
     database="susan"
@@ -31,13 +31,14 @@ class ListenKTPAPI(APIView):
             print(cursor.rowcount, "record(s) affected")
             if (cursor.rowcount == -1):
                 print("No KTP data")
-                userLineID = ""
+                userLineID = userLineID
                 str_ktp = ""
             elif (cursor.rowcount >= 1):
                 for data in result:
                     str_ktp = data
-        except mysql.connector.errors.InternalError as err:
-            print("Database exception", err)
+        except Exception as e:
+            userLineID = userLineID
+            str_ktp = ""
         
         return Response({
             'userLineId': userLineID,
