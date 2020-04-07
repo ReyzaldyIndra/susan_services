@@ -181,6 +181,8 @@ class ListenerAPI(APIView):
                 q_ans = "SELECT tbl_answer.jawaban, tbl_record.tingkat_layanan FROM tbl_answer JOIN tbl_record JOIN tbl_user ON tbl_user.id_profil=tbl_record.id_record WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
             elif (answer_id == 18) :
                 q_ans = "SELECT tbl_answer.jawaban, tbl_record.jenis_kunjungan FROM tbl_answer JOIN tbl_record JOIN tbl_user ON tbl_user.id_profil=tbl_record.id_record WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+userLineId+"'"
+            elif (answer_id == 29) :
+                q_ans = "SELECT tbl_answer.jawaban FROM tbl_answer WHERE tbl_answer.ner='"+join_str+"'"
 
        
         print(q_ans)
