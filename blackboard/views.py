@@ -255,30 +255,40 @@ class ListenerAPI(APIView):
 
 class UpdateKTPApi(APIView):
     def put(self, request):
+        str_ktp = ""
+        str_id_line = ""
         cursor = db.cursor()
         cursor_ktp = db.cursor()
-        
-        # first_name = request.data['first_name']
         userLineId = request.data['userLineId']
         no_ktp = request.data['ktp']
-        
-        q_put = "UPDATE tbl_user SET no_ktp='"+no_ktp+"' WHERE id_user_line='"+userLineId+"';"
-        q_ktp = "SELECT tbl_user.no_ktp FROM tbl_user WHERE id_user_line='" + userLineId + "';"
+        q_put = "UPDATE tbl_user SET id_user_line='"+userLineId+"' WHERE no_ktp='"+no_ktp+"';"
         cursor.execute(q_put)
         db.commit()
-        print(cursor.rowcount, "record(s) affected")
-        cursor_ktp.execute(q_ktp)
-        result_ktp = cursor_ktp.fetchone()
-        print(userLineId)
-        print(no_ktp)
-        for data in result_ktp:
-            print("ktp result", data)
+        
+        q_ktp = "SELECT no_ktp, id_user_line FROM tbl_user WHERE no_ktp="+no_ktp+";"
+        try:
+            print(q_ktp)
+            cursor_ktp.execute(q_ktp)
+            result_ktp = cursor_ktp.fetchall()
+            print(cursor_ktp.rowcount, "record(s) affected")
+            db.commit()
+            if (cursor.rowcount == -1):
+                print("No KTP data")
+                str_id_line = ""
+                str_ktp = ""
+            elif (cursor.rowcount >= 1):
+                for data in result_ktp:
+                    str_ktp = data[0]
+                    print(data)
+                    str_id_line = data[1]
+
+        except Exception as e:
+            str_id_line = ""
+            str_ktp = ""
         return Response({
-            'userLineId': userLineId,
-            'ktp': data
+            'userLineId': str_id_line,
+            'ktp': str_ktp
         })
-        # kelas_rawat = request.data['kelas_rawat']
-        # q_register = "INSERT INTO tbl_user (no_ktp, nama, id_user_line, id_profil, id_record, id_transaction_biaya, id_transaction_iuran, id_transaction_tagihan, id_answer) VALUES (" + no_ktp + first_name + userLineId + albert94, +kelas_rawat 1, 1, 1, 1, 1, NULL);"
 
 class PostKTPApi(APIView):
     def post(self, request):

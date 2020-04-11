@@ -21,27 +21,30 @@ db = mysql.connector.connect(
 class ListenKTPAPI(APIView):
     def get(self, request):
         str_ktp = ""
+        str_id_line = ""
         cursor = db.cursor()
-        userLineID = request.data['userLineId']
-        q_ktp = "SELECT no_ktp FROM tbl_user WHERE id_user_line='" + userLineID + "';"
+        noKTP = request.data['no_ktp']
+        q_ktp = "SELECT no_ktp, id_user_line FROM tbl_user WHERE no_ktp='" + noKTP + "';"
         cursor.execute(q_ktp)
         try:
-            result = cursor.fetchone()
+            result = cursor.fetchall()
             db.commit()
             print(cursor.rowcount, "record(s) affected")
             if (cursor.rowcount == -1):
                 print("No KTP data")
-                userLineID = userLineID
+                str_id_line = ""
                 str_ktp = ""
             elif (cursor.rowcount >= 1):
                 for data in result:
-                    str_ktp = data
+                    str_ktp = data[0]
+                    print(data)
+                    str_id_line = data[1]
         except Exception as e:
-            userLineID = userLineID
+            str_id_line = ""
             str_ktp = ""
         
         return Response({
-            'userLineId': userLineID,
+            'userLineId': str_id_line,
             'ktp': str_ktp
         })
 
