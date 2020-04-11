@@ -138,7 +138,7 @@ class ListenerAPI(APIView):
                         print(answer_biaya, 'strbiaya')
 
                         return Response({
-                            'answer': answer_kelas + answer_biaya,
+                            'answer': answer_kelas + ' ' + answer_biaya,
                             'intent': ans
                         })
         elif (ans == "OTHERS"):
