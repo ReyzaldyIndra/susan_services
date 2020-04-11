@@ -48,6 +48,30 @@ class ListenKTPAPI(APIView):
             'ktp': str_ktp
         })
 
+class ListenAvailKTPAPI(APIView):
+    def get(self, request):
+        str_ktp = ""
+        cursor = db.cursor()
+        no_ktp = request.data['no_ktp']
+        q_ktp = "SELECT no_ktp FROM tbl_user WHERE no_ktp="+no_ktp+";"
+        cursor.execute(q_ktp)
+        try:
+            result = cursor.fetchone()
+            db.commit()
+            print(cursor.rowcount, "record(s) affected")
+            if (cursor.rowcount == -1):
+                print("No KTP data")
+                str_ktp = ""
+            elif (cursor.rowcount >= 1):
+                for data in result:
+                    str_ktp = data
+        except Exception as e:
+            str_ktp = ""
+        
+        return Response({
+            'ktp': str_ktp
+        })
+
 class ListenNERAPI(APIView):
     def post(self, request):
         cursor = db.cursor()

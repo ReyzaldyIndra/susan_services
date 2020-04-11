@@ -18,7 +18,8 @@ urlpatterns = [
     path('ktp/', views2.ListenKTPAPI.as_view(), name='listenKTP'),
     path('ktp/update/', views.UpdateKTPApi.as_view(), name='updateKTP'),
     path('ktp/post/', views.PostKTPApi.as_view(), name='postKTP'),
-    path('ner/', views2.ListenNERAPI.as_view(), name='listenNER')
+    path('ner/', views2.ListenNERAPI.as_view(), name='listenNER'),
+    path('ktp/avail/', views2.ListenAvailKTPAPI.as_view(), name='listenAvailKTP')
 ]
 
 # {
