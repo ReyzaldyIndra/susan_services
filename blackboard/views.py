@@ -38,6 +38,7 @@ class ListenerAPI(APIView):
     
         post_data = request.data
         sentence = post_data['sentence']
+        print(sentence)
         userLineId = post_data['userLineId']
 
         # Berapa biaya BPJS untuk kelas 1?
@@ -53,7 +54,7 @@ class ListenerAPI(APIView):
         'I-KABUPATEN_FASKES', 'B-TIPE_FASKES','I-TIPE_FASKES', 'B-KELAS_RAWAT', 'B-SEGMEN',
         'B-DISEASE', 'B-STATUS_PULANG','B-HOSPITAL','I-HOSPITAL', 'B-TINGKAT_LAYANAN','I-TINGKAT_LAYANAN', 
         'B-JENIS_KUNJUNGAN','I-JENIS_KUNJUNGAN','B-TGL_DATANG', 'B-TGL_PULANG', 'B-TGL_TINDAKAN','I-TGL_TINDAKAN',
-        'B-POLIKLINIK_RUJUKAN','I-POLIKLINIK_RUJUKAN']
+        'B-POLIKLINIK_RUJUKAN','I-POLIKLINIK_RUJUKAN', 'I-KELAS_RAWAT']
         str_ner = Filter(ans_ner, substr)
         join_str = "".join(str_ner)
         print(join_str)
@@ -85,7 +86,61 @@ class ListenerAPI(APIView):
         
         if (ans == "TRANSACTION"):
             if (answer_id == 1) :
-                q_ans = "SELECT tbl_answer.jawaban, tbl_transaction_biaya.biaya_kelas_biaya FROM tbl_answer JOIN tbl_transaction_biaya JOIN tbl_user  ON tbl_user.id_transaction_biaya=tbl_transaction_biaya.id_transaction_biaya WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line ='"+ userLineId+"'"
+                q_ans = "SELECT tbl_answer.jawaban, tbl_transaction_biaya.kelas_rawat_biaya FROM tbl_answer JOIN tbl_transaction_biaya JOIN tbl_user ON tbl_user.id_transaction_biaya=tbl_transaction_biaya.id_transaction_biaya WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line = '"+ userLineId+"' AND tbl_answer.id_answer = 1;"
+                q_ans_add = "SELECT tbl_answer.jawaban, tbl_transaction_biaya.biaya_kelas_biaya FROM tbl_answer JOIN tbl_transaction_biaya JOIN tbl_user ON tbl_user.id_transaction_biaya=tbl_transaction_biaya.id_transaction_biaya WHERE tbl_answer.ner='' AND tbl_user.id_user_line = '"+ userLineId+"' AND tbl_answer.id_answer = 31;"
+                cursor.execute(q_ans)
+                
+                ans_kelas = cursor.fetchall()
+                
+                db.commit()
+
+                for data_kelas in ans_kelas:
+                    string_ans_kelas = data_kelas
+                    answer_kelas = ','.join(data_kelas).replace(',', ' ')
+                    print(answer_kelas, 'strkelas')
+                    cursor_other.execute(q_ans_add)
+                    ans_biaya = cursor_other.fetchall()
+                    db.commit()
+                    
+                    for data_biaya in ans_biaya:
+                        print(data_biaya, 'databiaya')
+                        string_ans_biaya = data_biaya
+                        answer_biaya = ','.join(data_biaya).replace(',', ' ')
+                        print(answer_biaya, 'strbiaya')
+
+                        return Response({
+                            'answer': answer_kelas + " dengan biaya " + answer_biaya,
+                            'intent': ans
+                        })
+            elif (answer_id == 24) :
+                q_ans = "SELECT tbl_answer.jawaban, tbl_transaction_biaya.biaya_kelas_biaya FROM tbl_answer JOIN tbl_transaction_biaya JOIN tbl_user  ON tbl_user.id_transaction_biaya=tbl_transaction_biaya.id_transaction_biaya WHERE tbl_answer.id_answer=24 AND tbl_user.id_user_line ='"+ userLineId+"'"
+            elif (answer_id == 30) :
+                q_ans = "SELECT tbl_answer.jawaban, tbl_transaction_biaya.kelas_rawat_biaya FROM tbl_answer JOIN tbl_transaction_biaya JOIN tbl_user ON tbl_user.id_transaction_biaya=tbl_transaction_biaya.id_transaction_biaya WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line = '"+ userLineId+"' AND tbl_answer.id_answer = 30;"
+                q_ans_add = "SELECT tbl_answer.jawaban, tbl_transaction_biaya.biaya_kelas_biaya FROM tbl_answer JOIN tbl_transaction_biaya JOIN tbl_user ON tbl_user.id_transaction_biaya=tbl_transaction_biaya.id_transaction_biaya WHERE tbl_answer.ner='' AND tbl_user.id_user_line = '"+ userLineId+"' AND tbl_answer.id_answer = 31;"
+                cursor.execute(q_ans)
+                
+                ans_kelas = cursor.fetchall()
+                
+                db.commit()
+
+                for data_kelas in ans_kelas:
+                    string_ans_kelas = data_kelas
+                    answer_kelas = ','.join(data_kelas).replace(',', ' ')
+                    print(answer_kelas, 'strkelas')
+                    cursor_other.execute(q_ans_add)
+                    ans_biaya = cursor_other.fetchall()
+                    db.commit()
+                    
+                    for data_biaya in ans_biaya:
+                        print(data_biaya, 'databiaya')
+                        string_ans_biaya = data_biaya
+                        answer_biaya = ','.join(data_biaya).replace(',', ' ')
+                        print(answer_biaya, 'strbiaya')
+
+                        return Response({
+                            'answer': answer_kelas + answer_biaya,
+                            'intent': ans
+                        })
         elif (ans == "OTHERS"):
                 q_ans = "SELECT jawaban FROM tbl_answer WHERE intent='OTHERS';"
         elif (ans == "PROFIL"):
