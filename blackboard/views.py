@@ -265,7 +265,7 @@ class UpdateKTPApi(APIView):
         cursor.execute(q_put)
         db.commit()
         
-        q_ktp = "SELECT no_ktp, id_user_line FROM tbl_user WHERE no_ktp="+no_ktp+";"
+        q_ktp = "SELECT no_ktp, id_user_line FROM tbl_user WHERE no_ktp="+no_ktp+" OR id_user_line='"+userLineId+"';"
         try:
             print(q_ktp)
             cursor_ktp.execute(q_ktp)

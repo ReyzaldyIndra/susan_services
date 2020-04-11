@@ -24,7 +24,7 @@ class ListenKTPAPI(APIView):
         str_id_line = ""
         cursor = db.cursor()
         user_id_line = request.data['userLineId']
-        q_ktp = "SELECT no_ktp, id_user_line FROM tbl_user WHERE id_user_line='" + user_id_line + "';"
+        q_ktp = "SELECT no_ktp, id_user_line FROM tbl_user WHERE id_user_line='"+user_id_line+"';"
         cursor.execute(q_ktp)
         try:
             result = cursor.fetchall()
