@@ -70,6 +70,15 @@ class ListenerAPI(APIView):
             except Exception as e:
                 q_ans = "SELECT jawaban FROM tbl_answer WHERE intent='OTHERS';"
                 print("kosong cuk")
+                cursor.execute(q_ans)
+                results = cursor.fetchall()
+                for data in results:
+                    string_ans = ','.join(data).replace(',', ' ')
+                return Response({
+                    'answer': string_ans,
+                    'intent': ans
+                    })
+
         elif (join_str == "") :
             # q_ans = ""
             print(ans)
