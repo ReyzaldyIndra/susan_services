@@ -59,7 +59,7 @@ class ListenerAPI(APIView):
         join_str = "".join(str_ner)
         print(join_str)
         if (join_str != "") :
-            q_id = "SELECT id_answer FROM tbl_answer WHERE ner='"+join_str+"';"
+            q_id = "SELECT id_answer FROM tbl_answer WHERE ner='"+join_str+"' AND intent='"+ans+"';"
             cursor_answer.execute(q_id)
             res_ans_id = cursor_answer.fetchone()
             db.commit()
