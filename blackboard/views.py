@@ -122,10 +122,10 @@ class ListenerAPI(APIView):
                             'intent': ans
                         })
             elif (answer_id == 24) :
-                q_ans = "SELECT tbl_answer.jawaban, tbl_transaction_biaya.biaya_kelas_biaya FROM tbl_answer JOIN tbl_transaction_biaya JOIN tbl_user  ON tbl_user.id_transaction_biaya=tbl_transaction_biaya.id_transaction_biaya WHERE tbl_answer.id_answer=24 AND tbl_user.id_user_line ='"+ userLineId+"'"
+                q_ans = "SELECT tbl_answer.jawaban, tbl_transaction_tagihan.biaya_kelas_tagihan FROM tbl_answer JOIN tbl_transaction_tagihan JOIN tbl_user ON tbl_user.id_transaction_tagihan=tbl_transaction_tagihan.id_transaction_tagihan WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line = '"+userLineId+"' AND tbl_answer.id_answer = 24;"
             elif (answer_id == 30) :
-                q_ans = "SELECT tbl_answer.jawaban, tbl_transaction_biaya.kelas_rawat_biaya FROM tbl_answer JOIN tbl_transaction_biaya JOIN tbl_user ON tbl_user.id_transaction_biaya=tbl_transaction_biaya.id_transaction_biaya WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line = '"+ userLineId+"' AND tbl_answer.id_answer = 30;"
-                q_ans_add = "SELECT tbl_answer.jawaban, tbl_transaction_biaya.biaya_kelas_biaya FROM tbl_answer JOIN tbl_transaction_biaya JOIN tbl_user ON tbl_user.id_transaction_biaya=tbl_transaction_biaya.id_transaction_biaya WHERE tbl_answer.ner='' AND tbl_user.id_user_line = '"+ userLineId+"' AND tbl_answer.id_answer = 31;"
+                q_ans = "SELECT tbl_answer.jawaban, tbl_transaction_iuran.kelas_rawat_iuran FROM tbl_answer JOIN tbl_transaction_iuran JOIN tbl_user ON tbl_user.id_transaction_iuran=tbl_transaction_iuran.id_transaction_iuran WHERE tbl_answer.ner='"+join_str+"' AND tbl_user.id_user_line='"+userLineId+"' AND tbl_answer.id_answer = 30;"
+                q_ans_add = "SELECT tbl_answer.jawaban, tbl_transaction_iuran.biaya_kelas_iuran FROM tbl_answer JOIN tbl_transaction_iuran JOIN tbl_user ON tbl_user.id_transaction_iuran=tbl_transaction_iuran.id_transaction_iuran WHERE tbl_answer.ner='' AND tbl_user.id_user_line = '"+userLineId+"' AND tbl_answer.id_answer = 31;"
                 cursor.execute(q_ans)
                 
                 ans_kelas = cursor.fetchall()
