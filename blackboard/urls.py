@@ -22,10 +22,4 @@ urlpatterns = [
     path('ktp/avail/', views2.ListenAvailKTPAPI.as_view(), name='listenAvailKTP')
 ]
 
-# {
-#     # path('', views.index, name='index'),
-#     url(r'^question/$', GetView.as_view(), name="create"),
 
-# }
-
-# urlpatterns = format_suffix_patterns(urlpatterns)
